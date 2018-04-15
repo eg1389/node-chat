@@ -52,6 +52,19 @@ var socket = io();
 });
 
 
+var locationButton = jQuery('#send-location');
+locationButton.on('click',function(){
+if (!navigator.geolocation){
+     return alert('your browser not support geo location');
+}
+navigator.geolocation.getCurrentPosition(function(position){
+console.log(position);
+},function(){
+    alert('can not fetch');
+});
+});
+
+
     socket.on('disconnect',function (){
        console.log('disconnect to server hamid index');
     });
