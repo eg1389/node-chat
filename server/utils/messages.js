@@ -6,6 +6,14 @@ return {
 };
 };
 
+var generateLocationMessages = (from,latitude,longitude)=>{
+ return{
+    from,
+    url : `https://www.google.com/maps?q=${latitude},${longitude}`,
+    createat : new Date().getTime()
+ };
+};
 module.exports = {
-    generateMessages
+    generateMessages,
+    generateLocationMessages
 };

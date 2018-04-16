@@ -3,7 +3,7 @@ const path = require('path');
 const socketIO = require('socket.io');
 const http = require('http');
 const publicpath = path.join(__dirname,'../public');
-const {generateMessages} = require('./utils/messages');
+const {generateMessages,generateLocationMessages} = require('./utils/messages');
 const port = process.env.PORT || 2800;
 var app = express();
 var server = http.createServer(app);
@@ -59,6 +59,10 @@ connectt.on('createMessB',(amghezi,callback)=>{
 
  /* connectt.broadcast.emit('newMessB',generateMessages(amghezi.from,amghezi.text));*/
   callback('from server hamid');
+});
+
+connectt.on('createLocation',(latlong)=>{
+io.emit('newLocation',generateLocationMessages('location :',latlong.latitude,latlong.longitude));
 });
 
 connectt.on('disconnect',()=>{

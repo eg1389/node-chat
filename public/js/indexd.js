@@ -57,13 +57,28 @@ locationButton.on('click',function(){
 if (!navigator.geolocation){
      return alert('your browser not support geo location');
 }
-navigator.geolocation.getCurrentPosition(function(position){
-console.log(position);
+navigator.geolocation.getCurrentPosition(function(posi){
+socket.emit('createLocation',{
+ latitude : posi.coords.latitude,
+ longitude : posi.coords.longitude
+});
 },function(){
     alert('can not fetch');
 });
 });
 
+
+
+
+
+socket.on('newLocation',function(locaO){
+var li = jQuery('<li></li>');
+var a = jQuery('<a target="_blank">My Location</a>')
+li.text(`${locaO.from} : `);
+a.attr('href',`${locaO.url}`);
+li.append(a);
+jQuery('#locationo').append(li);
+});
 
     socket.on('disconnect',function (){
        console.log('disconnect to server hamid index');
