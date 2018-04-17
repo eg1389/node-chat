@@ -26,7 +26,7 @@ connectt.broadcast.emit('payamO',{
 
 
 
-connectt.emit('newEmail',{
+/*connectt.emit('newEmail',{
     from : 'asghar@yahoo.com',
     text : 'hey man hamidam ahay',
     createat : 123
@@ -45,7 +45,7 @@ connectt.on('createEmail',(dada)=>{
 
 connectt.on('createMessage',(cme)=>{
   console.log('create mesage',cme);
-});
+});*/
 
 connectt.on('createMessB',(amghezi,callback)=>{
   console.log(amghezi);
@@ -58,7 +58,7 @@ connectt.on('createMessB',(amghezi,callback)=>{
   io.emit('newMessB',generateMessages(amghezi.from,amghezi.text));
 
  /* connectt.broadcast.emit('newMessB',generateMessages(amghezi.from,amghezi.text));*/
-  callback('from server hamid');
+  callback();
 });
 
 connectt.on('createLocation',(latlong)=>{
