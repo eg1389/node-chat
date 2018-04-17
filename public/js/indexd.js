@@ -53,12 +53,15 @@ locationButton.on('click',function(){
 if (!navigator.geolocation){
      return alert('your browser not support geo location');
 }
+locationButton.attr('disabled','disabled').text('sending location...');
 navigator.geolocation.getCurrentPosition(function(posi){
-socket.emit('createLocation',{
+locationButton.removeAttr('disabled').text('send location');
+    socket.emit('createLocation',{
  latitude : posi.coords.latitude,
  longitude : posi.coords.longitude
 });
 },function(){
+    locationButton.removeAttr('disabled').text('send location');
     alert('can not fetch');
 });
 });
