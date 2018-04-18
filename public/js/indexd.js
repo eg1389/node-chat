@@ -1,4 +1,29 @@
 var socket = io();
+
+//auto scroll
+
+function scrollToBottom () {
+    // Selectors
+    var messages = jQuery('#messol');
+    //select last list item
+    var newMessage = messages.children('li:last-child')
+    // Heights
+    var clientHeight = messages.prop('clientHeight');
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeight = newMessage.prev().innerHeight();
+  
+    if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+      messages.scrollTop(scrollHeight);
+    }
+  }
+
+
+
+
+
+
     socket.on("connect",function (cone){
        console.log('connect to server hamid index');
     
@@ -32,6 +57,7 @@ var socket = io();
            createat : formattedTime
        });
        jQuery('#messol').append(html);
+       scrollToBottom();
     //var formattedTime = moment(eee.createat).locale('fa').format("jYYYY/jMM/jD - h:mm a");
      //console.log('brodcast',eee);
      //var li=jQuery('<li></li>');
@@ -89,6 +115,7 @@ socket.on('newLocation',function(locaO){
      createat:loctime
  });
  jQuery('#messol').append(htmlLO);
+ scrollToBottom();
  
 
  
