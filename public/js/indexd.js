@@ -24,9 +24,11 @@ var socket = io();
 
    // for broadcasting
    socket.on('newMessB',function(eee){
-     console.log('brodcast',eee);
+    var formattedTime = moment(eee.createat).locale('fa').format("jYYYY/jMM/jD - h:mm a");
+     //console.log('brodcast',eee);
      var li=jQuery('<li></li>');
-     li.text(`${eee.from} : ${eee.text}`);
+    
+     li.text(`${eee.from} ${formattedTime} : ${eee.text}`);
      jQuery('#messol').append(li);
    });
 
@@ -71,9 +73,10 @@ locationButton.removeAttr('disabled').text('send location');
 
 
 socket.on('newLocation',function(locaO){
+    var loctime = moment(locaO.createat).format("jYYYY/jMM/jD");
 var li = jQuery('<li></li>');
 var a = jQuery('<a target="_blank">My Location</a>')
-li.text(`${locaO.from} : `);
+li.text(`${loctime} -- ${locaO.from} : `);
 a.attr('href',`${locaO.url}`);
 li.append(a);
 jQuery('#messol').append(li);
