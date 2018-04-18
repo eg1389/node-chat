@@ -4,6 +4,7 @@ const socketIO = require('socket.io');
 const http = require('http');
 const publicpath = path.join(__dirname,'../public');
 const {generateMessages,generateLocationMessages} = require('./utils/messages');
+const {isRealString} = require('./utils/validation');
 const port = process.env.PORT || 2800;
 var app = express();
 var server = http.createServer(app);
@@ -14,15 +15,28 @@ app.use(express.static(publicpath));
 io.on('connection',(connectt)=>{
 console.log('one user connect');
 
-//dar hengame vorrod be karbar payame khosh amad midahad
+/*//dar hengame vorrod be karbar payame khosh amad midahad
 connectt.emit('payamO',generateMessages('Modire khafan','baba khosh amadi'));
 
 //yek payam be hame dar room midahad ke user joind shod
 connectt.broadcast.emit('payamO',{
     from : 'Modir',
     text : 'one user joid to chat'
-});
+});*/
 
+// baraye join
+connectt.on('join',(params,callback)=>{
+    if(!isRealString(params.name) || !isRealString(params.room)){
+        callback('name or roon required');
+    }
+    connectt.join(params.room);
+
+    connectt.emit('payamO',generateMessages('Modire khafan','baba khosh amadi'));
+    connectt.broadcast.to(params.room).emit('payamO',generateMessages('Modire khafan',`${params.name} joid to chat`));
+        
+
+callback();
+});
 
 
 

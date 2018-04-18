@@ -25,9 +25,21 @@ function scrollToBottom () {
 
 
     socket.on("connect",function (cone){
-       console.log('connect to server hamid index');
-    
-      /* socket.emit('createEmail',{
+
+        var params = jQuery.deparam(window.location.search);
+            socket.emit('join',params,function(err){
+                if (err){
+                    alert(err);
+                   window.location.href = '/';
+                }else{
+
+                  console.log('no error');
+                }
+
+            })
+
+       //console.log('connect to server hamid index');
+       /* socket.emit('createEmail',{
            to:'ohh@javad.com',
            text : 'solaris bashavad ah'
        });

@@ -4,67 +4,33 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>joind | ChatApp</title>
   <link rel="stylesheet" href="./css/styles.css">
-</head>
+  </head>
 
-<body class="chat">
-  <div class="chat__sidebar">
-    <h2>People</h2>
-    <div id="users"></div>
-  </div>
+<body class=centered-form>
+    <div class="centered-form__form">
+          
+        <form action="./chat.html">
+        <div class="form-field">
+            <h3>Join a Chat</h3>
+        </div>
+        <div class="form-field">
+            <label>Display Name</label>
+            <input type="text" name="name" autofocus/>
+        </div>
+        <div class="form-field">
+            <label>Room Name</label>
+            <input type="text" name="room">
+        </div>
+        <div class="form-field">
+            <button>Joind</button>
+        </div>
+        </form>
+    </div>
 
-  <div class="chat__main">
-      <ol id="messol" class="chat__messages"></ol>
-    
-    <ol id="moshakhas" class="chat__messages"></ol>
-    
-    <ol id="locationo"  ></ol>
-    
-    
-    <div class="chat__footer">
-    <form id="message-form">
-      <input name="message" type="text" placeholder="Enter text" autofocus autocomplete="off"/>
-      <button>Send</button>
-    </form>
-    <button id="send-location">Send Location</button>
-  </div>
-  </div>
-
-  <div >
-
-    <script id="message-template" type="text/template">
-      
-      <li class="message">
-       <div class="message__title">
-          <h2>{{from}}</h2>
-          <span>{{createat}}</span>
-       </div>
-       <div class="message__body">
-         <p>{{text}}</p>
-       </div>
-      </li>  
-      </script>
-
-      <script id="location-template" type="text/template">
-      <li class="message">
-        <div class="message__title">
-          <h1>{{from}}</h1>
-          <span>{{createat}}</span>
-          </div>
-        <div class="message__body">
-          <p>
-            <a href="{{url}}" target="_blank">مختصان من</a>
-          </p>
-          </div>
-        </li>
-      </script>
-  
-  <script src="/socket.io/socket.io.js"> </script>
-  <script src='./js/libs/jquery-3.3.1.min.js'></script>
-  <script src="./js/indexd.js"></script>
-  <script src="./js/libs/moment.js"></script>
-  <script src="./js/libs/jalali-moment.browser.js"></script>
-  <script src="./js/libs/mustache.js"></script>
 </body>
+
 
 </html>
