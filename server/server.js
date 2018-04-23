@@ -19,7 +19,7 @@ var users = new Users();
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect(process.env.MONGOLAB_URI ||  process.env.MONGOHQ_URL || 'mongodb://localhost:27017/chatIIV');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/chatIIV');
 
 var chatSchema = mongoose.Schema({
  nik : {type:String},
