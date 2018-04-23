@@ -38,26 +38,45 @@ function scrollToBottom () {
 
             })
 
-       //console.log('connect to server hamid index');
-       /* socket.emit('createEmail',{
-           to:'ohh@javad.com',
-           text : 'solaris bashavad ah'
-       });
+           //old messages
+     socket.on('oldmsg',function(docs){
+        for(var i=0; i<docs.length; i++){
+           displayMsg(docs[i]);
+        }
+    });
 
-       socket.emit('createMessage',{
-        to:'javad',
-        text:'ohhhhh'
-       });*/    
        
     });
 
-   /*socket.on('newEmail',function(hasan){
-     console.log('new email',hasan);
-   }); 
+    socket.on('disconnect',function (){
+        console.log('disconnect to server hamid index');
+     });
 
-   socket.on('newMessage',function(sal){
-      console.log('new masssage',sal);
-   });*/
+     socket.on('updateUserList', function(users){
+       var ol=jQuery('<ol></ol>');
+       
+       users.forEach(function(user){
+        ol.append(jQuery('<li></li>').text(user));
+       });
+       
+       jQuery('#users').html(ol);
+     });
+
+
+
+ 
+
+      function displayMsg(data){
+        //var formattedTime = moment(data.createat).locale('fa').format("jYYYY/jMM/jD - h:mm a");
+        var templateNM = jQuery('#message-template').html();
+        var html = Mustache.render(templateNM,{
+            text:data.msg,
+            from : data.nik,
+            createat :data.createat
+        });
+        jQuery('#messol').append(html);
+        scrollToBottom();
+      };
 
    // for broadcasting
    socket.on('newMessB',function(eee){
@@ -70,12 +89,7 @@ function scrollToBottom () {
        });
        jQuery('#messol').append(html);
        scrollToBottom();
-    //var formattedTime = moment(eee.createat).locale('fa').format("jYYYY/jMM/jD - h:mm a");
-     //console.log('brodcast',eee);
-     //var li=jQuery('<li></li>');
     
-     //li.text(`${eee.from} ${formattedTime} : ${eee.text}`);
-     //jQuery('#messol').append(li);
    });
 
    socket.on('payamO',function(one){
@@ -131,15 +145,7 @@ socket.on('newLocation',function(locaO){
  
 
  
-    /*var loctime = moment(locaO.createat).format("jYYYY/jMM/jD");
-var li = jQuery('<li></li>');
-var a = jQuery('<a target="_blank">My Location</a>')
-li.text(`${loctime} -- ${locaO.from} : `);
-a.attr('href',`${locaO.url}`);
-li.append(a);
-jQuery('#messol').append(li);*/
+    
 });
 
-    socket.on('disconnect',function (){
-       console.log('disconnect to server hamid index');
-    });
+    

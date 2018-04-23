@@ -5,73 +5,93 @@ const http = require('http');
 const publicpath = path.join(__dirname,'../public');
 const {generateMessages,generateLocationMessages} = require('./utils/messages');
 const {isRealString} = require('./utils/validation');
+const mongoose = require('mongoose');
 const port = process.env.PORT || 2800;
 var app = express();
 var server = http.createServer(app);
 var io=socketIO(server);
+const {Users} = require('./utils/users');
+var moment = require('jalali-moment');
 
 app.use(express.static(publicpath));
+ 
+var users = new Users();
+
+mongoose.Promise = global.Promise;
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/chatIIV');
+
+var chatSchema = mongoose.Schema({
+ nik : {type:String},
+ msg : {type:String},
+ createat: {type:String}
+});
+
+var chatm = mongoose.model('messagesm',chatSchema);
+
 
 io.on('connection',(connectt)=>{
 console.log('one user connect');
 
-/*//dar hengame vorrod be karbar payame khosh amad midahad
-connectt.emit('payamO',generateMessages('Modire khafan','baba khosh amadi'));
 
-//yek payam be hame dar room midahad ke user joind shod
-connectt.broadcast.emit('payamO',{
-    from : 'Modir',
-    text : 'one user joid to chat'
-});*/
 
 // baraye join
 connectt.on('join',(params,callback)=>{
     if(!isRealString(params.name) || !isRealString(params.room)){
-        callback('name or roon required');
+        return callback('name or roon required');
     }
     connectt.join(params.room);
+    users.removeUser(connectt.id);
+    users.addUser(connectt.id,params.name,params.room);
 
+    
+
+
+    io.to(params.room).emit('updateUserList',users.getUserList(params.room));
     connectt.emit('payamO',generateMessages('Modire khafan','baba khosh amadi'));
     connectt.broadcast.to(params.room).emit('payamO',generateMessages('Modire khafan',`${params.name} joid to chat`));
         
+
+     //peyda kardan massagehaye ghadimi
+    chatm.find({},(err,docs)=>{
+        if(err){
+          throw err;
+        } 
+        
+        connectt.emit('oldmsg',docs);
+        console.log(docs);
+        
+      });
 
 callback();
 });
 
 
 
-/*connectt.emit('newEmail',{
-    from : 'asghar@yahoo.com',
-    text : 'hey man hamidam ahay',
-    createat : 123
 
-});
-
-connectt.emit('newMessage',{
-    from : 'hamid',
-    text:'salama aleykon',
-    createat : 123321
-});
-
-connectt.on('createEmail',(dada)=>{
-    console.log(dada);
-});
-
-connectt.on('createMessage',(cme)=>{
-  console.log('create mesage',cme);
-});*/
 
 connectt.on('createMessB',(amghezi,callback)=>{
-  console.log(amghezi);
+    var user = users.getUser(connectt.id);
+   if(user && isRealString(amghezi.text)){
+          
+    //zakhire chat dar database
+       var newChat = new chatm({nik: user.name,msg:amghezi.text,createat:moment().locale('fa').format("jYYYY/jMM/jD - h:mm a")});
+       newChat.save((err)=>{
+           if(err){
+               throw err;
+           }
+       });
+
+    io.to(user.room).emit('newMessB',generateMessages(user.name,amghezi.text));
+   }
+  
   /*io.emit('newMessB',{
       from : amghezi.from,
       text:  amghezi.text,
       createat : new Date().getTime()
   });*/
 
-  io.emit('newMessB',generateMessages(amghezi.from,amghezi.text));
-
- /* connectt.broadcast.emit('newMessB',generateMessages(amghezi.from,amghezi.text));*/
+  
   callback();
 });
 
@@ -80,7 +100,11 @@ io.emit('newLocation',generateLocationMessages('location :',latlong.latitude,lat
 });
 
 connectt.on('disconnect',()=>{
- console.log('uses disconnect');
+    var userb = users.removeUser(connectt.id);
+    //update kardane list bad az khooroje user
+    io.to(userb.room).emit('updateUserList',users.getUserList(userb.room));
+    //yek payam mifreste ke user kharej shod
+    io.to(userb.room).emit('payamO',generateMessages('Admin',`${userb.name} left the chat`));
 });
 
 });

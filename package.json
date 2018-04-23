@@ -17,6 +17,7 @@
     "jalali-moment": "^3.1.1",
     "moment": "^2.22.1",
     "moment-jalali": "^0.3.9",
+    "mongoose": "^5.0.15",
     "nodemon": "^1.17.3",
     "socket.io": "^2.1.0"
   }
